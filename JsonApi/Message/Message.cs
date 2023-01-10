@@ -15,6 +15,16 @@
                 HostName = hostName;
             }
         }
+        public class Methods
+        {
+            public string methNameUrl { get; set; }
+            public string Description { get; set; }
+            public Methods(string methNameUrl, string description)
+            {
+                this.methNameUrl = methNameUrl;
+                Description = description;
+            }
+        }
     }
 }
 
