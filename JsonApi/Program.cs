@@ -21,9 +21,9 @@ app.MapGet("/info", async (context) =>
 {
     List<Message.Methods> messages = new List<Message.Methods>()
     {
-        new Message.Methods("/ping","Checking the work"),
-        new Message.Methods("/status","Info about process"),
-        new Message.Methods("/calc","Calculator")
+        new Message.Methods("/ping","Checking the work","Get",""),
+        new Message.Methods("/status","Info about process","Get",""),
+        new Message.Methods("/calc","Calculator","Post","Double a, Double b, Double c")
     };
     await context.Response.WriteAsJsonAsync<List<Message.Methods>>(messages);
 });

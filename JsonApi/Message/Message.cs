@@ -19,10 +19,14 @@
         {
             public string methNameUrl { get; set; }
             public string Description { get; set; }
-            public Methods(string methNameUrl, string description)
+            public string Method { get; set; }
+            public string Parameters { get; set; }
+            public Methods(string methNameUrl, string description, string method, string parameters)
             {
                 this.methNameUrl = methNameUrl;
                 Description = description;
+                Method = method;
+                Parameters = parameters;
             }
         }
     }
