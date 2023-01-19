@@ -1,9 +1,27 @@
 using JsonApi.Message;
 using JsonApi.Services;
-
+using JsonApi.Entity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<JsonApiDbContext>();
+builder.Services.AddTransient<CRUDService>();
+
 var app = builder.Build();
+
+
+
+app.Use(async (HttpContext context,Func<Task> next) =>
+{
+    string useragent = context.Request.Headers.UserAgent.ToString();
+    KnownHost knownHost = new KnownHost(useragent);
+    Request request = new Request(DateTime.Now.ToString() ,context.Request.Path.ToString());
+    CRUDService service = context.RequestServices.GetService<CRUDService>();
+    service.AddKnownHost(knownHost);
+    service.AddRequest(request);
+    await next.Invoke();
+    // действия после обработки запроса следующим middleware
+});
 
 app.MapGet("/", () => "Hello");
 app.MapGet("/ping", async (context) =>
@@ -30,8 +48,17 @@ app.MapGet("/info", async (context) =>
 
 app.MapPost("/calc", async (context) =>
 {
-    CalcMessage.CalcInput input = await context.Request.ReadFromJsonAsync<CalcMessage.CalcInput>(); //new CalcMessage.CalcInput(a, b, c);
+    CalcMessage.CalcInput input = await context.Request.ReadFromJsonAsync<CalcMessage.CalcInput>(); 
     await context.Response.WriteAsJsonAsync(CalcService.SolutionEquation(input));
 });
 
+app.MapGet("/known-host", async (HttpContext context, CRUDService crudservice) =>
+{
+    await context.Response.WriteAsJsonAsync(crudservice.GetAllHosts());
+});
+
+app.MapGet("/known-requests", async (HttpContext context, CRUDService crudservice) =>
+{
+    await context.Response.WriteAsJsonAsync(crudservice.GetAllRequests());
+});
 app.Run();
