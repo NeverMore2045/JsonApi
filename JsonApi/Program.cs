@@ -41,7 +41,8 @@ app.MapGet("/info", async (context) =>
     {
         new Message.Methods("/ping","Checking the work (Pong if all good)","Get",""),
         new Message.Methods("/status","Info about process (Server Status - OK,Time,Dns)","Get",""),
-        new Message.Methods("/calc","Calculator(Quadratic equations)","Post","Double a, Double b, Double c")
+        new Message.Methods("/known-host","Get hosts from DataBase","Get",""),
+        new Message.Methods("/known-requests","Get requests from DataBase ","Get","")
     };
     await context.Response.WriteAsJsonAsync<List<Message.Methods>>(messages);
 });
